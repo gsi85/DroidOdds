@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Droid Odds</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="notification_title">Notification title</string>
+    <string name="notification_message">notification_message</string>
+    
+    <string name="odds_textview_default">\nTake a snapshot\n</string>
+    
+
+</resources>
