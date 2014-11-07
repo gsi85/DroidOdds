@@ -1,5 +1,6 @@
 package com.sisa.droidodds.activty;
 
+import roboguice.RoboGuice;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
+		RoboGuice.setUseAnnotationDatabases(false);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 

@@ -1,7 +1,7 @@
 package com.sisa.droidodds.activty;
 
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends RoboActivity {
 
 }

@@ -1,23 +1,26 @@
 package com.sisa.droidodds.layout;
 
+import roboguice.RoboGuice;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.sisa.droidodds.R;
 import com.sisa.droidodds.calculator.OddsCalculatorFacade;
 import com.sisa.droidodds.service.OverlayService;
 
 public class OddsOverlayView extends OverlayView {
 
-	private final OddsCalculatorFacade odssCalculatorFacade;
+	@Inject
+	private OddsCalculatorFacade odssCalculatorFacade;
 	private TextView info;
 	private Handler handler;
 
 	public OddsOverlayView(final OverlayService service) {
 		super(service, R.layout.odds_activity, 1);
-		odssCalculatorFacade = new OddsCalculatorFacade();
+		RoboGuice.injectMembers(service, this);
 	}
 
 	@Override

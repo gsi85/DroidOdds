@@ -1,12 +1,12 @@
 package com.sisa.droidodds.service;
 
+import roboguice.service.RoboService;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-public class OverlayService extends Service {
+public class OverlayService extends RoboService {
 
 	protected boolean foreground = false;
 	protected boolean cancelNotification = false;
@@ -20,8 +20,7 @@ public class OverlayService extends Service {
 		moveToForeground(id, foregroundNotification(id), cancelNotification);
 	}
 
-	public void moveToForeground(final int id, final Notification notification,
-			final boolean cancelNotification) {
+	public void moveToForeground(final int id, final Notification notification, final boolean cancelNotification) {
 		if (!this.foreground && notification != null) {
 			this.foreground = true;
 			this.id = id;
@@ -30,8 +29,7 @@ public class OverlayService extends Service {
 			super.startForeground(id, notification);
 		} else if (this.id != id && id > 0 && notification != null) {
 			this.id = id;
-			((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
-					.notify(id, notification);
+			((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(id, notification);
 		}
 	}
 
@@ -46,8 +44,7 @@ public class OverlayService extends Service {
 	}
 
 	@Override
-	public int onStartCommand(final Intent intent, final int flags,
-			final int startId) {
+	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 		return START_STICKY;
 	}
 

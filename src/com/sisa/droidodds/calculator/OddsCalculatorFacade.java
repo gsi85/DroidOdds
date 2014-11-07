@@ -3,18 +3,29 @@ package com.sisa.droidodds.calculator;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import roboguice.RoboGuice;
+
+import com.google.inject.Inject;
+import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.image.DroidHenImageRecognizer;
-import com.sisa.droidodds.image.ImageRecognizer;
 
+/**
+ * 
+ * TODO: anotate classes with ContextSingleton / Singleton
+ * 
+ * @author Laca
+ * 
+ */
 public class OddsCalculatorFacade {
 
-	private final ImageRecognizer imageRecognizer;
-	private final OddsCalculatorService oddsCalculatorService;
+	@Inject
+	private DroidHenImageRecognizer imageRecognizer;
+	@Inject
+	private OddsCalculatorService oddsCalculatorService;
 
 	public OddsCalculatorFacade() {
-		imageRecognizer = new DroidHenImageRecognizer();
-		oddsCalculatorService = new OddsCalculatorService();
+		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 	}
 
 	public String getOdds(final String currentTetxt) {
