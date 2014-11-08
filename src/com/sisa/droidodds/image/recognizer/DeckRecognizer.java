@@ -25,7 +25,6 @@ public class DeckRecognizer {
 	private static final int EXPECTED_SIZE_AFTER_HANDS_RECOGNIZED = 2;
 	private static final int EXPECTED_SIZE_AFTER_FIRST_CARD_RECOGNIZED = 3;
 	private static final int EXPECTED_SIZE_AFTER_TURN_CARD_RECOGNIZED = 6;
-
 	private static final int WHITE = Color.WHITE;
 
 	@Inject

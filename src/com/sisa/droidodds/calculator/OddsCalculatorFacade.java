@@ -9,13 +9,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
-import com.sisa.droidodds.image.ImageRecognizer;
+import com.sisa.droidodds.image.ImageRecognizerFacade;
 
 @Singleton
 public class OddsCalculatorFacade {
 
 	@Inject
-	private ImageRecognizer imageRecognizer;
+	private ImageRecognizerFacade imageRecognizerFacade;
 	@Inject
 	private OddsCalculatorService oddsCalculatorService;
 
@@ -25,7 +25,7 @@ public class OddsCalculatorFacade {
 
 	public String getOdds(final String currentTetxt) {
 		final long start = System.nanoTime();
-		final List<Card> recognizedCards = imageRecognizer.recognizeLatestScreenshot();
+		final List<Card> recognizedCards = imageRecognizerFacade.recognizeLatestScreenshot();
 		final long stop = System.nanoTime();
 		final long duration = stop - start;
 		final double seconds = duration / 1000000000.0;

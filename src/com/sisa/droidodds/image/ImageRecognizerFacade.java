@@ -16,8 +16,14 @@ import com.sisa.droidodds.image.loader.LatestScreenshotProvider;
 import com.sisa.droidodds.image.recognizer.DeckRecognizer;
 import com.sisa.droidodds.image.recognizer.HandRecognizer;
 
+/**
+ * Image recognizer facade, completely processes a given screenshot.
+ * 
+ * @author Laszlo Sisa
+ * 
+ */
 @Singleton
-public class ImageRecognizer {
+public class ImageRecognizerFacade {
 
 	@Inject
 	private LatestScreenshotProvider latestScreenshotProvider;
@@ -26,10 +32,18 @@ public class ImageRecognizer {
 	@Inject
 	private DeckRecognizer deckRecognizer;
 
-	public ImageRecognizer() {
+	/**
+	 * DI constructor.
+	 */
+	public ImageRecognizerFacade() {
 		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 	}
 
+	/**
+	 * Recognizes all {@link Card} on a given screenshot.
+	 * 
+	 * @return the List of recognized card
+	 */
 	public List<Card> recognizeLatestScreenshot() {
 		List<Card> cardsInHand = new ArrayList<>();
 		cardsInHand = recognizeCardsInHand(cardsInHand);
