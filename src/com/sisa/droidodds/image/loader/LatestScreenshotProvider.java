@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
+import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
 
+@Singleton
 public class LatestScreenshotProvider {
 
 	public File getLatestScreenshotFile() {
@@ -44,6 +46,5 @@ public class LatestScreenshotProvider {
 		}
 
 		return imageToProcess;
-		// return new File(Environment.getExternalStorageDirectory() + "/DH_Texas_Poker/screenshot/DH_Texas_Poker_2014_10_31_10_19_14.PNG");
 	}
 }

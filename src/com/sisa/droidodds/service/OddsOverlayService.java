@@ -36,15 +36,10 @@ public class OddsOverlayService extends OverlayService {
 	protected Notification foregroundNotification(final int notificationId) {
 		Notification notification;
 
-		notification = new Notification.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(getString(R.string.notification_title))
-				.setContentText(getString(R.string.notification_message))
-				.build();
+		notification = new Notification.Builder(this).setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle(getString(R.string.notification_title)).setContentText(getString(R.string.notification_message)).build();
 
-		notification.flags = notification.flags
-				| Notification.FLAG_ONGOING_EVENT
-				| Notification.FLAG_ONLY_ALERT_ONCE;
+		notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_ONLY_ALERT_ONCE;
 
 		return notification;
 	}

@@ -1,12 +1,14 @@
 package com.sisa.droidodds.image.recognizer;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import roboguice.RoboGuice;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
+import com.sisa.droidodds.configuration.ConfigurationReader;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.card.Suit;
@@ -17,16 +19,26 @@ import com.sisa.droidodds.domain.card.Suit;
  * 
  * 
  */
+@Singleton
 public class CardOcr {
+
+	private static final String IMAGE_SUIT_WIDTH = "OCR_IMAGE_SUIT_WIDTH";
+	private static final String IMAGE_SUIT_HEIGHT = "OCR_IMAGE_SUIT_HEIGHT";
+	private static final String IMAGE_RANK_WIDTH = "OCR_IMAGE_RANK_WIDTH";
+	private static final String IMAGE_RANK_HEIGHT = "OCR_IMAGE_RANK_HEIGHT";
 
 	// TODO: configuration source
 	private static final int ACCEPTED_RANK_MATCH_RATE_TRESHOLD = 95;
 	private static final int ACCEPTED_SUIT_MATCH_RATE_TRESHOLD = 99;
 
-	private final ImageMatcher imageMatcher;
+	@Inject
+	private ConfigurationReader configurationReader;
+
+	@Inject
+	private ImageMatcher imageMatcher;
 
 	public CardOcr() {
-		this.imageMatcher = new ImageMatcher();
+		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 	}
 
 	public Card recognizeImage(final Bitmap image) {
@@ -42,40 +54,24 @@ public class CardOcr {
 		return recognizedCard;
 	}
 
-	// TODO Move out to configuration source
-	private Map<Suit, Bitmap> getSuitSampleImageMap() {
-		final Map<Suit, Bitmap> suitSampleImageMap = new HashMap<>();
-		for (final Suit suit : Suit.values()) {
-			final String resourceString = String.format("card_1280_720_%s", suit.getName());
-			final int resourceId = DroidOddsApplication.getAppContext().getResources()
-					.getIdentifier(resourceString, "drawable", "com.sisa.droidodds");
-			final Bitmap sample = Bitmap.createScaledBitmap(
-					BitmapFactory.decodeResource(DroidOddsApplication.getAppContext().getResources(), resourceId), 12, 22, false);
-			suitSampleImageMap.put(suit, sample);
-		}
-		return suitSampleImageMap;
-	}
-
-	// TODO Move out to configuration source
-	private Map<Rank, Bitmap> getRankSampleImageMap() {
-		final Map<Rank, Bitmap> suitSampleImageMap = new HashMap<>();
-		for (final Rank rank : Rank.values()) {
-			final String resourceString = String.format("card_1280_720_%s", Integer.toString(rank.getValue()));
-			final int resourceId = DroidOddsApplication.getAppContext().getResources()
-					.getIdentifier(resourceString, "drawable", "com.sisa.droidodds");
-			final Bitmap sample = Bitmap.createScaledBitmap(
-					BitmapFactory.decodeResource(DroidOddsApplication.getAppContext().getResources(), resourceId), 23, 37, false);
-			suitSampleImageMap.put(rank, sample);
-		}
-		return suitSampleImageMap;
-	}
-
 	private Bitmap cutSuitFromImage(final Bitmap image) {
-		return Bitmap.createBitmap(image, 0, 38, 12, 22);
+		return Bitmap.createBitmap(image, 0, 38, getInt(IMAGE_SUIT_WIDTH), getInt(IMAGE_SUIT_HEIGHT));
 	}
 
 	private Bitmap cutRankFromImage(final Bitmap image) {
-		return Bitmap.createBitmap(image, 0, 0, 23, 37);
+		return Bitmap.createBitmap(image, 0, 0, getInt(IMAGE_RANK_WIDTH), getInt(IMAGE_RANK_HEIGHT));
+	}
+
+	public int getInt(final String configurationKey) {
+		return configurationReader.getInt(configurationKey);
+	}
+
+	private Map<Suit, Bitmap> getSuitSampleImageMap() {
+		return configurationReader.getSuitSampleImageMap();
+	}
+
+	private Map<Rank, Bitmap> getRankSampleImageMap() {
+		return configurationReader.getRankSampleImageMap();
 	}
 
 }

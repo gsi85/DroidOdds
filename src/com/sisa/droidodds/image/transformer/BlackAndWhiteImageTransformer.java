@@ -3,10 +3,15 @@ package com.sisa.droidodds.image.transformer;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class BlackAndWhiteImageTransformer {
 
 	private static final int BLACK_COLOR = Color.BLACK;
 	private static final int WHITE_COLOR = Color.WHITE;
+
+	// TODO: should come from configuration
 	private static final double BLUE_COLOR_WEIGHT = Double.valueOf(0.1140);
 	private static final double GREEN_COLOR_WEIGHT = Double.valueOf(0.5870);
 	private static final double RED_COLOR_WEIGHT = Double.valueOf(0.2989);
@@ -14,7 +19,6 @@ public class BlackAndWhiteImageTransformer {
 	private static final int THRESHOLD_CORRECTION = Integer.valueOf(70);
 
 	public Bitmap transformImage(final Bitmap originalImage) {
-
 		final int width = originalImage.getWidth();
 		final int height = originalImage.getHeight();
 		final Bitmap monoChromeImage = Bitmap.createBitmap(width, height, originalImage.getConfig());

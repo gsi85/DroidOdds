@@ -2,11 +2,15 @@ package com.sisa.droidodds.image.recognizer;
 
 import java.util.List;
 
+import roboguice.RoboGuice;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.image.transformer.BlackAndWhiteImageTransformer;
 
@@ -15,6 +19,7 @@ import com.sisa.droidodds.image.transformer.BlackAndWhiteImageTransformer;
  * TODO: yet another big TODO: change all harcoded values with values from congigruation
  * 
  */
+@Singleton
 public class DeckRecognizer {
 
 	private static final int EXPECTED_SIZE_AFTER_HANDS_RECOGNIZED = 2;
@@ -23,12 +28,13 @@ public class DeckRecognizer {
 
 	private static final int WHITE = Color.WHITE;
 
-	private final BlackAndWhiteImageTransformer blackAndWhiteImageTransformer;
-	private final CardOcr cardOcr;
+	@Inject
+	private BlackAndWhiteImageTransformer blackAndWhiteImageTransformer;
+	@Inject
+	private CardOcr cardOcr;
 
 	public DeckRecognizer() {
-		blackAndWhiteImageTransformer = new BlackAndWhiteImageTransformer();
-		cardOcr = new CardOcr();
+		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 	}
 
 	public List<Card> recognizeDeck(final Bitmap latestScreenshot, final List<Card> cardsInHand) {

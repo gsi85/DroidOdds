@@ -18,8 +18,7 @@ public class OverlayView extends RelativeLayout {
 	private int layoutResId;
 	private int notificationId = 0;
 
-	public OverlayView(final OverlayService service, final int layoutResId,
-			final int notificationId) {
+	public OverlayView(final OverlayService service, final int layoutResId, final int notificationId) {
 		super(service);
 
 		this.layoutResId = layoutResId;
@@ -47,13 +46,9 @@ public class OverlayView extends RelativeLayout {
 	}
 
 	private void setupLayoutParams() {
-		layoutParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.WRAP_CONTENT,
-				WindowManager.LayoutParams.WRAP_CONTENT,
-				WindowManager.LayoutParams.TYPE_PHONE,
-				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-						| WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-						| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+		layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
+				WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+						| WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
 				PixelFormat.OPAQUE);
 
 		layoutParams.gravity = getLayoutGravity();
@@ -70,8 +65,7 @@ public class OverlayView extends RelativeLayout {
 		// the
 		// View to the WindowManager service.
 
-		final LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		inflater.inflate(layoutResId, this);
 
@@ -104,9 +98,7 @@ public class OverlayView extends RelativeLayout {
 
 			onSetupLayoutParams();
 
-			((WindowManager) getContext().getSystemService(
-					Context.WINDOW_SERVICE)).updateViewLayout(this,
-					layoutParams);
+			((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).updateViewLayout(this, layoutParams);
 
 			refresh();
 		}
@@ -116,8 +108,7 @@ public class OverlayView extends RelativeLayout {
 	protected void addView() {
 		setupLayoutParams();
 
-		((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-				.addView(this, layoutParams);
+		((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).addView(this, layoutParams);
 
 		super.setVisibility(View.GONE);
 	}
@@ -129,8 +120,7 @@ public class OverlayView extends RelativeLayout {
 	}
 
 	protected void unload() {
-		((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-				.removeView(this);
+		((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).removeView(this);
 		removeAllViews();
 	}
 
@@ -140,8 +130,7 @@ public class OverlayView extends RelativeLayout {
 	}
 
 	public void destory() {
-		((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-				.removeView(this);
+		((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).removeView(this);
 	}
 
 	public void refresh() {
@@ -188,11 +177,9 @@ public class OverlayView extends RelativeLayout {
 	@Override
 	public void setVisibility(final int visibility) {
 		if (visibility == View.VISIBLE) {
-			getService().moveToForeground(notificationId,
-					!showNotificationHidden());
+			getService().moveToForeground(notificationId, !showNotificationHidden());
 		} else {
-			getService().moveToBackground(notificationId,
-					!showNotificationHidden());
+			getService().moveToBackground(notificationId, !showNotificationHidden());
 		}
 
 		if (getVisibility() != visibility) {

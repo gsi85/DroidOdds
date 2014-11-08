@@ -7,15 +7,21 @@ package com.sisa.droidodds.domain.card;
  * 
  */
 public enum Suit {
-	SPADES("spades"), HEARTS("hearts"), DIAMONDS("diamonds"), CLUBS("clubs");
+	SPADES("spades", "♠"), HEARTS("hearts", "♥"), DIAMONDS("diamonds", "♦"), CLUBS("clubs", "♣");
 
 	private final String name;
+	private final String abbreviatedName;
 
-	private Suit(final String name) {
+	private Suit(final String name, final String abbreviatedName) {
 		this.name = name;
+		this.abbreviatedName = abbreviatedName;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getAbbreviatedName() {
+		return abbreviatedName;
 	}
 }

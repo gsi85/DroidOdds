@@ -22,23 +22,23 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int card_1280_720_10=0x7f020000;
-        public static final int card_1280_720_11=0x7f020001;
-        public static final int card_1280_720_12=0x7f020002;
-        public static final int card_1280_720_13=0x7f020003;
-        public static final int card_1280_720_14=0x7f020004;
-        public static final int card_1280_720_2=0x7f020005;
-        public static final int card_1280_720_3=0x7f020006;
-        public static final int card_1280_720_4=0x7f020007;
-        public static final int card_1280_720_5=0x7f020008;
-        public static final int card_1280_720_6=0x7f020009;
-        public static final int card_1280_720_7=0x7f02000a;
-        public static final int card_1280_720_8=0x7f02000b;
-        public static final int card_1280_720_9=0x7f02000c;
-        public static final int card_1280_720_clubs=0x7f02000d;
-        public static final int card_1280_720_diamonds=0x7f02000e;
-        public static final int card_1280_720_hearts=0x7f02000f;
-        public static final int card_1280_720_spades=0x7f020010;
+        public static final int droidhen_720_1280_10=0x7f020000;
+        public static final int droidhen_720_1280_11=0x7f020001;
+        public static final int droidhen_720_1280_12=0x7f020002;
+        public static final int droidhen_720_1280_13=0x7f020003;
+        public static final int droidhen_720_1280_14=0x7f020004;
+        public static final int droidhen_720_1280_2=0x7f020005;
+        public static final int droidhen_720_1280_3=0x7f020006;
+        public static final int droidhen_720_1280_4=0x7f020007;
+        public static final int droidhen_720_1280_5=0x7f020008;
+        public static final int droidhen_720_1280_6=0x7f020009;
+        public static final int droidhen_720_1280_7=0x7f02000a;
+        public static final int droidhen_720_1280_8=0x7f02000b;
+        public static final int droidhen_720_1280_9=0x7f02000c;
+        public static final int droidhen_720_1280_clubs=0x7f02000d;
+        public static final int droidhen_720_1280_diamonds=0x7f02000e;
+        public static final int droidhen_720_1280_hearts=0x7f02000f;
+        public static final int droidhen_720_1280_spades=0x7f020010;
         public static final int ic_launcher=0x7f020011;
     }
     public static final class id {

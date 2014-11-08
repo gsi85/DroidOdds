@@ -1,26 +1,42 @@
 package com.sisa.droidodds.layout;
 
 import roboguice.RoboGuice;
+import android.content.Context;
+import android.graphics.Point;
 import android.os.Handler;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.R;
 import com.sisa.droidodds.calculator.OddsCalculatorFacade;
+import com.sisa.droidodds.configuration.ConfigurationReader;
+import com.sisa.droidodds.configuration.GameMode;
 import com.sisa.droidodds.service.OverlayService;
 
 public class OddsOverlayView extends OverlayView {
 
 	@Inject
 	private OddsCalculatorFacade odssCalculatorFacade;
+	@Inject
+	private ConfigurationReader configurationReader;
 	private TextView info;
 	private Handler handler;
 
 	public OddsOverlayView(final OverlayService service) {
 		super(service, R.layout.odds_activity, 1);
 		RoboGuice.injectMembers(service, this);
+
+		// TODO: should this be moved to activty?
+		final WindowManager windowManager = (WindowManager) DroidOddsApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+		final Display display = windowManager.getDefaultDisplay();
+		final Point size = new Point();
+		display.getSize(size);
+		configurationReader.loadConfiguration(GameMode.DROIDHEN, size.x, size.y);
 	}
 
 	@Override

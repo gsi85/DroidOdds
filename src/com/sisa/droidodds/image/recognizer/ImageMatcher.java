@@ -7,6 +7,9 @@ import java.util.Map.Entry;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class ImageMatcher {
 
 	// TODO to configuration source

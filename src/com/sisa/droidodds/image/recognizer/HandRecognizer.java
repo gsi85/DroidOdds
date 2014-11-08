@@ -2,21 +2,28 @@ package com.sisa.droidodds.image.recognizer;
 
 import java.util.List;
 
+import roboguice.RoboGuice;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.image.transformer.BlackAndWhiteImageTransformer;
 
+@Singleton
 public class HandRecognizer {
 
 	private static final int WHITE = Color.WHITE;
 
-	private final BlackAndWhiteImageTransformer blackAndWhiteImageTransformer;
-	private final CardOcr cardOcr;
+	@Inject
+	private BlackAndWhiteImageTransformer blackAndWhiteImageTransformer;
+	@Inject
+	private CardOcr cardOcr;
 
 	/***
 	 * 
@@ -24,8 +31,7 @@ public class HandRecognizer {
 	 * 
 	 */
 	public HandRecognizer() {
-		this.blackAndWhiteImageTransformer = new BlackAndWhiteImageTransformer();
-		this.cardOcr = new CardOcr();
+		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 	}
 
 	public List<Card> recognizeHand(final Bitmap latestScreenshot, final List<Card> cardsInHand) {
