@@ -1,5 +1,11 @@
 package com.sisa.droidodds.configuration;
 
+/**
+ * Enumeration of supported poker applications.
+ * 
+ * @author Laszlo Sisa
+ * 
+ */
 public enum GameMode {
 	DROIDHEN("droidhen");
 

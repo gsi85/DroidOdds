@@ -5,7 +5,7 @@ import org.apache.commons.lang3.Validate;
 /**
  * Domain objects describing a playing card.
  * 
- * @author Laca
+ * @author Laszlo Sisa
  * 
  */
 public class Card implements Comparable<Card> {

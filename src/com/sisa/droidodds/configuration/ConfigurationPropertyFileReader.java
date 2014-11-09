@@ -12,11 +12,24 @@ import android.util.Log;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
 
+/**
+ * Class for reading property files in assets folder.
+ * 
+ * @author Laszlo Sisa
+ * 
+ */
 @Singleton
 public class ConfigurationPropertyFileReader {
 
 	private static final String FILE_OPEN_ERROR_MESSAGE = "Failed to load asset with filename %s:";
 
+	/**
+	 * Reads the given property file into a map.
+	 * 
+	 * @param propertyFileName
+	 *            the name of the file in assets folder
+	 * @return the map loaded with configuration entries
+	 */
 	public Map<String, String> readPropertyFile(final String propertyFileName) {
 		Map<String, String> propertyMap = null;
 		try {

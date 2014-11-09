@@ -3,7 +3,7 @@ package com.sisa.droidodds.domain.card;
 /**
  * Enumeration of available card ranks.
  * 
- * @author Laca
+ * @author Laszlo Sisa
  * 
  */
 public enum Rank {

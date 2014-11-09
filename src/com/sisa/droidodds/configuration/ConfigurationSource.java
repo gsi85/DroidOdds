@@ -12,6 +12,12 @@ import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.card.Suit;
 
+/**
+ * Configuration value provider.
+ * 
+ * @author Laszlo Sisa
+ * 
+ */
 @Singleton
 public class ConfigurationSource {
 
@@ -32,18 +38,46 @@ public class ConfigurationSource {
 	private Map<Rank, Bitmap> rankSampleImageMap;
 	private Map<String, String> configurationMap;
 
+	/**
+	 * Reads the int value of a given configuration entry by it's name.
+	 * 
+	 * @param configurationKey
+	 *            entries key string
+	 * @return int value related to configuration key
+	 * @throws {@link NumberFormatException} if value cannot be parsed as integer value
+	 */
 	public int getInt(final String configurationKey) {
 		return Integer.parseInt(configurationMap.get(configurationKey));
 	}
 
+	/**
+	 * Returns the map containing {@link Suit} sample images for OCR.
+	 * 
+	 * @return {@link Suit} sample image map
+	 */
 	public Map<Suit, Bitmap> getSuitSampleImageMap() {
 		return suitSampleImageMap;
 	}
 
+	/**
+	 * Returns the map containing {@link Rank} sample images for OCR.
+	 * 
+	 * @return {@link Rank} sample image map
+	 */
 	public Map<Rank, Bitmap> getRankSampleImageMap() {
 		return rankSampleImageMap;
 	}
 
+	/**
+	 * Loads configuration property file.
+	 * 
+	 * @param gameMode
+	 *            the selected {@link GameMode}
+	 * @param displayWidth
+	 *            the device's display width in pixels
+	 * @param displayHeight
+	 *            the device's display height in pixels
+	 */
 	public void loadConfiguration(final GameMode gameMode, final int displayWidth, final int displayHeight) {
 		final String propertyName = buildFileName(gameMode, displayWidth, displayHeight);
 		final String propertyFileName = String.format("%s%s", propertyName, PROPERTIES_FILE_EXTENSION);
