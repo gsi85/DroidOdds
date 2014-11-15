@@ -51,6 +51,18 @@ public class ConfigurationSource {
 	}
 
 	/**
+	 * Reads the double value of a given configuration entry by it's name.
+	 * 
+	 * @param configurationKey
+	 *            entries key string
+	 * @return double value related to configuration key
+	 * @throws {@link NumberFormatException} if value cannot be parsed as double value
+	 */
+	public double getDouble(final String configurationKey) {
+		return Double.parseDouble(configurationMap.get(configurationKey));
+	}
+
+	/**
 	 * Returns the map containing {@link Suit} sample images for OCR.
 	 * 
 	 * @return {@link Suit} sample image map

@@ -4,36 +4,65 @@ import java.util.List;
 
 import roboguice.RoboGuice;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
+import com.sisa.droidodds.configuration.ConfigurationSource;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.image.transformer.BlackAndWhiteImageTransformer;
+import com.sisa.droidodds.image.transformer.ImageCutter;
 
+/**
+ * Recognizer for the cards in player's hand.
+ * 
+ * @author Laszlo Sisa
+ * 
+ */
 @Singleton
 public class HandRecognizer {
 
-	private static final int WHITE = Color.WHITE;
+	private static final String RIGHT_HAND_ROTATE = "OCR_IMAGE_RIGHT_HAND_ROTATE";
+	private static final String LEFT_HAND_ROTATE = "OCR_IMAGE_LEFT_HAND_ROTATE";
+	private static final String HAND_RIGHT_Y = "OCR_IMAGE_HAND_RIGHT_Y";
+	private static final String HAND_RIGHT_X = "OCR_IMAGE_HAND_RIGHT_X";
+	private static final String HAND_LEFT_Y = "OCR_IMAGE_HAND_LEFT_Y";
+	private static final String HAND_LEFT_X = "OCR_IMAGE_HAND_LEFT_X";
+	private static final String HAND_AREA_HEIGHT = "OCR_IMAGE_HAND_AREA_HEIGHT";
+	private static final String HAND_AREA_WIDTH = "OCR_IMAGE_HAND_AREA_WIDTH";
+	private static final String HAND_AREA_Y = "OCR_IMAGE_HAND_AREA_Y";
+	private static final String HAND_AREA_X = "OCR_IMAGE_HAND_AREA_X";
+	private static final String CORNER_TRIM_WIDTH = "OCR_IMAGE_CORNER_TRIM_WIDTH";
+	private static final String CARD_HEIGHT = "OCR_IMAGE_CARD_HEIGHT";
+	private static final String CARD_WIDTH = "OCR_IMAGE_CARD_WIDTH";
+	private static final String EDGE_TRIM_WIDTH = "OCR_IMAGE_EDGE_TRIM_WIDTH";
 
 	@Inject
 	private BlackAndWhiteImageTransformer blackAndWhiteImageTransformer;
 	@Inject
 	private CardOcr cardOcr;
+	@Inject
+	private ImageCutter imageCutter;
+	@Inject
+	private ConfigurationSource configurationSource;
 
-	/***
-	 * 
-	 * TODO: A BIG BIG TODO: replace all hardcoded number with values from configuration
-	 * 
+	/**
+	 * DI constructor.
 	 */
 	public HandRecognizer() {
 		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 	}
 
+	/**
+	 * Recognizes all cards on in player's hand.
+	 * 
+	 * @param latestScreenshot
+	 *            the {@link Bitmap} to be recognized
+	 * @param cardsInHand
+	 *            the initialized, empty list in which the recognized {@link Card}s are colected
+	 * @return the lit of recognized {@link Card}
+	 */
 	public List<Card> recognizeHand(final Bitmap latestScreenshot, final List<Card> cardsInHand) {
 		final Bitmap handArea = cutHandArea(latestScreenshot);
 		final Bitmap leftHand = blackAndWhiteImageTransformer.transformImage(getTrimmedLeftHand(handArea));
@@ -51,55 +80,30 @@ public class HandRecognizer {
 	}
 
 	private Bitmap cutHandArea(final Bitmap latestScreenshot) {
-		return Bitmap.createBitmap(latestScreenshot, 673, 504, 71, 64);
+		return Bitmap.createBitmap(latestScreenshot, getInt(HAND_AREA_X), getInt(HAND_AREA_Y), getInt(HAND_AREA_WIDTH),
+				getInt(HAND_AREA_HEIGHT));
 	}
 
 	private Bitmap getTrimmedRightHand(final Bitmap handArea) {
-		final Bitmap rightHand = cutAndRotateRightHand(handArea);
-		trimCorners(rightHand);
-		return trimEdges(rightHand);
+		Bitmap rightHand = alignRightHand(handArea);
+		rightHand = imageCutter.trimCorners(rightHand, getInt(CORNER_TRIM_WIDTH));
+		return imageCutter.trimEdges(rightHand, getInt(EDGE_TRIM_WIDTH));
 	}
 
 	private Bitmap getTrimmedLeftHand(final Bitmap handArea) {
-		final Bitmap lefthand = cutAndRotateLeftHand(handArea);
-		trimCorners(lefthand);
-		return trimEdges(lefthand);
+		Bitmap lefthand = alignLeftHand(handArea);
+		lefthand = imageCutter.trimCorners(lefthand, getInt(CORNER_TRIM_WIDTH));
+		return imageCutter.trimEdges(lefthand, getInt(EDGE_TRIM_WIDTH));
 	}
 
-	private Bitmap cutAndRotateLeftHand(final Bitmap handArea) {
-		return Bitmap.createBitmap(rotateImage(handArea, 15), 11, 6, 23, 60);
+	private Bitmap alignLeftHand(final Bitmap handArea) {
+		return Bitmap.createBitmap(rotateImage(handArea, getInt(LEFT_HAND_ROTATE)), getInt(HAND_LEFT_X), getInt(HAND_LEFT_Y),
+				getInt(CARD_WIDTH), getInt(CARD_HEIGHT));
 	}
 
-	private Bitmap cutAndRotateRightHand(final Bitmap handArea) {
-		return Bitmap.createBitmap(rotateImage(handArea, -15), 51, 0, 23, 60);
-	}
-
-	private void trimCorners(final Bitmap handImage) {
-		// TODO: consider whether drawing rectangle would perform better
-		final int width = handImage.getWidth();
-		final int height = handImage.getHeight();
-		for (int y = 5; y >= 1; y--) {
-			for (int x = 1; x <= y; x++) {
-				handImage.setPixel(x - 1, 5 - y, WHITE);
-				handImage.setPixel(width - x, 5 - y, WHITE);
-				handImage.setPixel(x - 1, height - 6 + y, WHITE);
-				handImage.setPixel(width - 6 + y, height - x, WHITE);
-			}
-		}
-	}
-
-	// TODO: could be extracted to util class
-	private Bitmap trimEdges(final Bitmap image) {
-		final Canvas canvas = new Canvas(image);
-		final Paint paint = new Paint();
-		final int width = image.getWidth();
-		final int height = image.getHeight();
-		paint.setColor(WHITE);
-		paint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(0, 0, 2, height, paint);
-		canvas.drawRect(width - 2, 0, width, height, paint);
-		canvas.drawRect(0, 0, width, 2, paint);
-		return image;
+	private Bitmap alignRightHand(final Bitmap handArea) {
+		return Bitmap.createBitmap(rotateImage(handArea, getInt(RIGHT_HAND_ROTATE)), getInt(HAND_RIGHT_X), getInt(HAND_RIGHT_Y),
+				getInt(CARD_WIDTH), getInt(CARD_HEIGHT));
 	}
 
 	private Bitmap rotateImage(final Bitmap handArea, final int angel) {
@@ -107,6 +111,10 @@ public class HandRecognizer {
 		matrix.preRotate(angel);
 		final Bitmap leftHand = Bitmap.createBitmap(handArea, 0, 0, handArea.getWidth(), handArea.getHeight(), matrix, true);
 		return leftHand;
+	}
+
+	private int getInt(final String configurationKey) {
+		return configurationSource.getInt(configurationKey);
 	}
 
 }
