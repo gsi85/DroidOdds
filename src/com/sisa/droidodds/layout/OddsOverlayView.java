@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.R;
 import com.sisa.droidodds.calculator.OddsCalculatorFacade;
+import com.sisa.droidodds.configuration.ConfigurationPreloader;
 import com.sisa.droidodds.configuration.ConfigurationSource;
 import com.sisa.droidodds.configuration.GameMode;
 import com.sisa.droidodds.service.OverlayService;
@@ -24,6 +25,8 @@ public class OddsOverlayView extends OverlayView {
 	private OddsCalculatorFacade odssCalculatorFacade;
 	@Inject
 	private ConfigurationSource configurationSource;
+	@Inject
+	private ConfigurationPreloader configurationPreloader;
 	private TextView info;
 	private Handler handler;
 
@@ -37,6 +40,7 @@ public class OddsOverlayView extends OverlayView {
 		final Point size = new Point();
 		display.getSize(size);
 		configurationSource.loadConfiguration(GameMode.DROIDHEN, size.x, size.y);
+		configurationPreloader.preloadOcrConfigurationValues();
 	}
 
 	@Override

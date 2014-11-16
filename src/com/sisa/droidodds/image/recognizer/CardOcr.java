@@ -2,6 +2,8 @@ package com.sisa.droidodds.image.recognizer;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
+
 import roboguice.RoboGuice;
 import android.graphics.Bitmap;
 
@@ -22,16 +24,19 @@ import com.sisa.droidodds.domain.card.Suit;
 @Singleton
 public class CardOcr {
 
-	private static final String SUIT_WIDTH = "OCR_IMAGE_SUIT_WIDTH";
-	private static final String SUIT_WIDTH_OFFSET = "OCR_IMAGE_SUIT_WIDTH_OFFSET";
-	private static final String SUIT_HEIGHT = "OCR_IMAGE_SUIT_HEIGHT";
-	private static final String SUIT_HEIGHT_OFFSET = "OCR_IMAGE_SUIT_HEIGHT_OFFSET";
-	private static final String RANK_WIDTH = "OCR_IMAGE_RANK_WIDTH";
-	private static final String RANK_HEIGHT = "OCR_IMAGE_RANK_HEIGHT";
-	private static final String RANK_WIDTH_OFFSET = "OCR_IMAGE_RANK_WIDTH_OFFSET";
-	private static final String RANK_HEIGHT_OFFSET = "OCR_IMAGE_RANK_HEIGHT_OFFSET";
-	private static final String ACCEPTED_RANK_MATCH_RATE_TRESHOLD = "OCR_ACCEPTED_RANK_MATCH_RATE_TRESHOLD";
-	private static final String ACCEPTED_SUIT_MATCH_RATE_TRESHOLD = "OCR_ACCEPTED_SUIT_MATCH_RATE_TRESHOLD";
+	private boolean configurationsLoaded;
+	Map<Suit, Bitmap> suitSampleImageMap;
+	Map<Rank, Bitmap> rankSampleImageMap;
+	private int suitWidth;
+	private int suitWidthOffset;
+	private int suitHeight;
+	private int suitHeightOffset;
+	private int rankWidth;
+	private int rankHeigth;
+	private int rankWidthOffset;
+	private int rankHeightOffset;
+	private int acceptedRankMatchRateThreshold;
+	private int acceptedSuitMatchRateThreshold;
 
 	@Inject
 	private ConfigurationSource configurationSource;
@@ -47,19 +52,21 @@ public class CardOcr {
 	}
 
 	/**
-	 * Recognizes a given image as {@link Card}.
+	 * Recognizes all {@link Card} on a given {@link Bitmap}.
 	 * 
 	 * @param image
 	 *            the image to recognize
 	 * @return the {@link Card} or null if the image is not recognized
+	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
 	 */
 	public Card recognizeImage(final Bitmap image) {
+		Validate.isTrue(configurationsLoaded);
 		Card recognizedCard = null;
-		final int suitMatchRateThreshold = getInt(ACCEPTED_SUIT_MATCH_RATE_TRESHOLD);
-		final int rankMatchRateThreshold = getInt(ACCEPTED_RANK_MATCH_RATE_TRESHOLD);
-		final Suit suit = imageMatcher.recognizeCard(cutSuitFromImage(image), getSuitSampleImageMap(), suitMatchRateThreshold);
+		final int suitMatchRateThreshold = acceptedSuitMatchRateThreshold;
+		final int rankMatchRateThreshold = acceptedRankMatchRateThreshold;
+		final Suit suit = imageMatcher.recognizeCard(cutSuitFromImage(image), suitSampleImageMap, suitMatchRateThreshold);
 		if (suit != null) {
-			final Rank rank = imageMatcher.recognizeCard(cutRankFromImage(image), getRankSampleImageMap(), rankMatchRateThreshold);
+			final Rank rank = imageMatcher.recognizeCard(cutRankFromImage(image), rankSampleImageMap, rankMatchRateThreshold);
 			if (rank != null) {
 				recognizedCard = new Card(rank, suit);
 			}
@@ -68,23 +75,29 @@ public class CardOcr {
 	}
 
 	private Bitmap cutSuitFromImage(final Bitmap image) {
-		return Bitmap.createBitmap(image, getInt(SUIT_WIDTH_OFFSET), getInt(SUIT_HEIGHT_OFFSET), getInt(SUIT_WIDTH), getInt(SUIT_HEIGHT));
+		return Bitmap.createBitmap(image, suitWidthOffset, suitHeightOffset, suitWidth, suitHeight);
 	}
 
 	private Bitmap cutRankFromImage(final Bitmap image) {
-		return Bitmap.createBitmap(image, getInt(RANK_WIDTH_OFFSET), getInt(RANK_HEIGHT_OFFSET), getInt(RANK_WIDTH), getInt(RANK_HEIGHT));
+		return Bitmap.createBitmap(image, rankWidthOffset, rankHeightOffset, rankWidth, rankHeigth);
 	}
 
-	public int getInt(final String configurationKey) {
-		return configurationSource.getInt(configurationKey);
+	/**
+	 * Loads values used by this class from {@link ConfigurationSource}, this should be called before calling other methods.
+	 */
+	public void preLoadConfigurationSourceValues() {
+		suitWidth = configurationSource.getInt("OCR_IMAGE_SUIT_WIDTH");
+		suitWidthOffset = configurationSource.getInt("OCR_IMAGE_SUIT_WIDTH_OFFSET");
+		suitHeight = configurationSource.getInt("OCR_IMAGE_SUIT_HEIGHT");
+		suitHeightOffset = configurationSource.getInt("OCR_IMAGE_SUIT_HEIGHT_OFFSET");
+		rankWidth = configurationSource.getInt("OCR_IMAGE_RANK_WIDTH");
+		rankHeigth = configurationSource.getInt("OCR_IMAGE_RANK_HEIGHT");
+		rankWidthOffset = configurationSource.getInt("OCR_IMAGE_RANK_WIDTH_OFFSET");
+		rankHeightOffset = configurationSource.getInt("OCR_IMAGE_RANK_HEIGHT_OFFSET");
+		acceptedRankMatchRateThreshold = configurationSource.getInt("OCR_ACCEPTED_RANK_MATCH_RATE_TRESHOLD");
+		acceptedSuitMatchRateThreshold = configurationSource.getInt("OCR_ACCEPTED_SUIT_MATCH_RATE_TRESHOLD");
+		suitSampleImageMap = configurationSource.getSuitSampleImageMap();
+		rankSampleImageMap = configurationSource.getRankSampleImageMap();
+		configurationsLoaded = true;
 	}
-
-	private Map<Suit, Bitmap> getSuitSampleImageMap() {
-		return configurationSource.getSuitSampleImageMap();
-	}
-
-	private Map<Rank, Bitmap> getRankSampleImageMap() {
-		return configurationSource.getRankSampleImageMap();
-	}
-
 }

@@ -97,7 +97,6 @@ public class ConfigurationSource {
 		configurationMap.putAll(configurationPropertyFileReader.readPropertyFile(propertyFileName));
 		setSuitSampleImageMap(propertyName);
 		setRankSampleImageMap(propertyName);
-
 	}
 
 	private String buildFileName(final GameMode gameMode, final int displayWidth, final int displayHeight) {

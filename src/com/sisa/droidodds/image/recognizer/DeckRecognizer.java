@@ -2,6 +2,8 @@ package com.sisa.droidodds.image.recognizer;
 
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
+
 import roboguice.RoboGuice;
 import android.graphics.Bitmap;
 
@@ -22,23 +24,24 @@ import com.sisa.droidodds.image.transformer.ImageCutter;
 @Singleton
 public class DeckRecognizer {
 
-	private static final String CARD_HEIGHT = "OCR_IMAGE_CARD_HEIGHT";
-	private static final String CARD_WIDTH = "OCR_IMAGE_CARD_WIDTH";
-	private static final String EDGE_TRIM_WIDTH = "OCR_IMAGE_EDGE_TRIM_WIDTH";
-	private static final String FLOP_1_X = "OCR_IMAGE_FLOP_1_X";
-	private static final String FLOP_1_Y = "OCR_IMAGE_FLOP_1_Y";
-	private static final String FLOP_2_X = "OCR_IMAGE_FLOP_2_X";
-	private static final String FLOP_2_Y = "OCR_IMAGE_FLOP_2_Y";
-	private static final String FLOP_3_X = "OCR_IMAGE_FLOP_3_X";
-	private static final String FLOP_3_Y = "OCR_IMAGE_FLOP_3_Y";
-	private static final String RIVER_X = "OCR_IMAGE_RIVER_X";
-	private static final String RIVER_Y = "OCR_IMAGE_RIVER_Y";
-	private static final String TURN_X = "OCR_IMAGE_TURN_X";
-	private static final String TURN_Y = "OCR_IMAGE_TURN_Y";
-
 	private static final int EXPECTED_SIZE_AFTER_HANDS_RECOGNIZED = 2;
 	private static final int EXPECTED_SIZE_AFTER_FIRST_CARD_RECOGNIZED = 3;
 	private static final int EXPECTED_SIZE_AFTER_TURN_CARD_RECOGNIZED = 6;
+
+	private boolean configurationsLoaded;
+	private int cardHeight;
+	private int cardWidth;
+	private int edgeTrimWidth;
+	private int flop1X;
+	private int flop1Y;
+	private int flop2X;
+	private int flop2Y;
+	private int flop3X;
+	private int flop3Y;
+	private int riverX;
+	private int riverY;
+	private int turnX;
+	private int turnY;
 
 	@Inject
 	private BlackAndWhiteImageTransformer blackAndWhiteImageTransformer;
@@ -64,8 +67,10 @@ public class DeckRecognizer {
 	 * @param cardsInHand
 	 *            the list previously recognized {@link Card} in hand
 	 * @return the lit of recognized {@link Card}
+	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
 	 */
 	public List<Card> recognizeDeck(final Bitmap latestScreenshot, final List<Card> cardsInHand) {
+		Validate.isTrue(configurationsLoaded);
 		recognizeFirstCardInFlop(latestScreenshot, cardsInHand);
 		return cardsInHand;
 	}
@@ -116,33 +121,23 @@ public class DeckRecognizer {
 	}
 
 	private Bitmap cutFirstCardInFlop(final Bitmap latestScreenshot) {
-		return imageCutter.trimEdges(
-				Bitmap.createBitmap(latestScreenshot, getInt(FLOP_1_X), getInt(FLOP_1_Y), getInt(CARD_WIDTH), getInt(CARD_HEIGHT)),
-				getInt(EDGE_TRIM_WIDTH));
+		return imageCutter.trimEdges(Bitmap.createBitmap(latestScreenshot, flop1X, flop1Y, cardWidth, cardHeight), edgeTrimWidth);
 	}
 
 	private Bitmap cutSecondCardInFlop(final Bitmap latestScreenshot) {
-		return imageCutter.trimEdges(
-				Bitmap.createBitmap(latestScreenshot, getInt(FLOP_2_X), getInt(FLOP_2_Y), getInt(CARD_WIDTH), getInt(CARD_HEIGHT)),
-				getInt(EDGE_TRIM_WIDTH));
+		return imageCutter.trimEdges(Bitmap.createBitmap(latestScreenshot, flop2X, flop2Y, cardWidth, cardHeight), edgeTrimWidth);
 	}
 
 	private Bitmap cutThirdCardInFlop(final Bitmap latestScreenshot) {
-		return imageCutter.trimEdges(
-				Bitmap.createBitmap(latestScreenshot, getInt(FLOP_3_X), getInt(FLOP_3_Y), getInt(CARD_WIDTH), getInt(CARD_HEIGHT)),
-				getInt(EDGE_TRIM_WIDTH));
+		return imageCutter.trimEdges(Bitmap.createBitmap(latestScreenshot, flop3X, flop3Y, cardWidth, cardHeight), edgeTrimWidth);
 	}
 
 	private Bitmap cutTurn(final Bitmap latestScreenshot) {
-		return imageCutter.trimEdges(
-				Bitmap.createBitmap(latestScreenshot, getInt(TURN_X), getInt(TURN_Y), getInt(CARD_WIDTH), getInt(CARD_HEIGHT)),
-				getInt(EDGE_TRIM_WIDTH));
+		return imageCutter.trimEdges(Bitmap.createBitmap(latestScreenshot, turnX, turnY, cardWidth, cardHeight), edgeTrimWidth);
 	}
 
 	private Bitmap cutRiver(final Bitmap latestScreenshot) {
-		return imageCutter.trimEdges(
-				Bitmap.createBitmap(latestScreenshot, getInt(RIVER_X), getInt(RIVER_Y), getInt(CARD_WIDTH), getInt(CARD_HEIGHT)),
-				getInt(EDGE_TRIM_WIDTH));
+		return imageCutter.trimEdges(Bitmap.createBitmap(latestScreenshot, riverX, riverY, cardWidth, cardHeight), edgeTrimWidth);
 	}
 
 	private boolean isHandRecognized(final List<Card> cardsInHand) {
@@ -157,7 +152,23 @@ public class DeckRecognizer {
 		return cardsInHand.size() == EXPECTED_SIZE_AFTER_TURN_CARD_RECOGNIZED;
 	}
 
-	private int getInt(final String configurationKey) {
-		return configurationSource.getInt(configurationKey);
+	/**
+	 * Loads values used by this class from {@link ConfigurationSource}, this should be called before calling other methods.
+	 */
+	public void preLoadConfigurationSourceValues() {
+		cardHeight = configurationSource.getInt("OCR_IMAGE_CARD_HEIGHT");
+		cardWidth = configurationSource.getInt("OCR_IMAGE_CARD_WIDTH");
+		edgeTrimWidth = configurationSource.getInt("OCR_IMAGE_EDGE_TRIM_WIDTH");
+		flop1X = configurationSource.getInt("OCR_IMAGE_FLOP_1_X");
+		flop1Y = configurationSource.getInt("OCR_IMAGE_FLOP_1_Y");
+		flop2X = configurationSource.getInt("OCR_IMAGE_FLOP_2_X");
+		flop2Y = configurationSource.getInt("OCR_IMAGE_FLOP_2_Y");
+		flop3X = configurationSource.getInt("OCR_IMAGE_FLOP_3_X");
+		flop3Y = configurationSource.getInt("OCR_IMAGE_FLOP_3_Y");
+		riverX = configurationSource.getInt("OCR_IMAGE_RIVER_X");
+		riverY = configurationSource.getInt("OCR_IMAGE_RIVER_Y");
+		turnX = configurationSource.getInt("OCR_IMAGE_TURN_X");
+		turnY = configurationSource.getInt("OCR_IMAGE_TURN_Y");
+		configurationsLoaded = true;
 	}
 }
