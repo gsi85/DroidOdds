@@ -57,10 +57,10 @@ public class CardOcr {
 	 * @param image
 	 *            the image to recognize
 	 * @return the {@link Card} or null if the image is not recognized
-	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
+	 * @throws {@link IllegalStateException} if called before configuration have been loaded
 	 */
 	public Card recognizeImage(final Bitmap image) {
-		Validate.isTrue(configurationsLoaded);
+		Validate.validState(configurationsLoaded);
 		Card recognizedCard = null;
 		final int suitMatchRateThreshold = acceptedSuitMatchRateThreshold;
 		final int rankMatchRateThreshold = acceptedRankMatchRateThreshold;

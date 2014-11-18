@@ -65,10 +65,10 @@ public class HandRecognizer {
 	 * @param cardsInHand
 	 *            the initialized, empty list in which the recognized {@link Card}s are colected
 	 * @return the lit of recognized {@link Card}
-	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
+	 * @throws {@link IllegalStateException} if called before configuration have been loaded
 	 */
 	public List<Card> recognizeHand(final Bitmap latestScreenshot, final List<Card> cardsInHand) {
-		Validate.isTrue(configurationsLoaded);
+		Validate.validState(configurationsLoaded);
 		recognizeFirstCard(latestScreenshot, cardsInHand);
 		return cardsInHand;
 	}

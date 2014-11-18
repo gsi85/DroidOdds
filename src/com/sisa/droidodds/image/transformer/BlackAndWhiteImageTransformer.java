@@ -46,10 +46,10 @@ public class BlackAndWhiteImageTransformer {
 	 * @param originalImage
 	 *            the {@link Bitmap} to be transformed
 	 * @return the monochrome {@link Bitmap}
-	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
+	 * @throws {@link IllegalStateException} if called before configuration have been loaded
 	 */
 	public Bitmap transformImage(final Bitmap originalImage) {
-		Validate.isTrue(configurationsLoaded);
+		Validate.validState(configurationsLoaded);
 		final int width = originalImage.getWidth();
 		final int height = originalImage.getHeight();
 		final Bitmap monoChromeImage = Bitmap.createBitmap(width, height, originalImage.getConfig());

@@ -65,6 +65,10 @@ public class Card implements Comparable<Card> {
 		return String.format("%s_of_%s", rank, suit);
 	}
 
+	public String getAbbreviatedName() {
+		return String.format("%s%s", suit.getAbbreviatedName(), rank.getAbbreviatedName());
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

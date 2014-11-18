@@ -53,10 +53,10 @@ public class ImageMatcher {
 	 *            the percent as integer describing the accepted match rate, if above no further samples will be compared
 	 * @return the recognized T type if found accepted match or best matching types match rate is above minimum accepted match rate
 	 *         described in {@link ConfigurationSource}, otherwise returns null
-	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
+	 * @throws {@link IllegalStateException} if called before configuration have been loaded
 	 */
 	public <T> T recognizeCard(final Bitmap imageToRecognize, final Map<T, Bitmap> suitSampleImageMap, final int acceptedMatchRate) {
-		Validate.isTrue(configurationsLoaded);
+		Validate.validState(configurationsLoaded);
 		boolean match = false;
 		int bestMatchRate = 0;
 		T bestMatch = null;

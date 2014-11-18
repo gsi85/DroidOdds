@@ -59,7 +59,7 @@ public class OddsCalculatorFacade {
 	private String buildResultStrgin(final List<Card> recognizedCards, final double milliSeconds) {
 		final StringBuilder resultStringBulider = new StringBuilder();
 		for (final Card card : recognizedCards) {
-			resultStringBulider.append(card.getSuit().getAbbreviatedName()).append(card.getRank().getAbbreviatedName()).append(" ");
+			resultStringBulider.append(card.getAbbreviatedName()).append(" ");
 		}
 		resultStringBulider.append("\n Took: ").append(milliSeconds).append(" ms");
 		return resultStringBulider.toString();

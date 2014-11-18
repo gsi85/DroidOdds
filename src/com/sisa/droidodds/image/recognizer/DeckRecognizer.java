@@ -67,10 +67,10 @@ public class DeckRecognizer {
 	 * @param cardsInHand
 	 *            the list previously recognized {@link Card} in hand
 	 * @return the lit of recognized {@link Card}
-	 * @throws {@link IllegalArgumentException} if called before configuration have been loaded
+	 * @throws {@link IllegalStateException} if called before configuration have been loaded
 	 */
 	public List<Card> recognizeDeck(final Bitmap latestScreenshot, final List<Card> cardsInHand) {
-		Validate.isTrue(configurationsLoaded);
+		Validate.validState(configurationsLoaded);
 		recognizeFirstCardInFlop(latestScreenshot, cardsInHand);
 		return cardsInHand;
 	}
