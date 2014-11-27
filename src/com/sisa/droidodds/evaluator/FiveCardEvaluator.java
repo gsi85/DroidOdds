@@ -1,4 +1,4 @@
-package com.sisa.droidodds.calculator;
+package com.sisa.droidodds.evaluator;
 
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -21,13 +21,13 @@ import com.sisa.droidodds.domain.hand.EvaluatedHand;
 import com.sisa.droidodds.domain.hand.Hand;
 
 /**
- * Class for evaluating the best hand of given cards.
+ * Class for evaluating the best hand of given 5 cards.
  * 
  * @author Laszlo Sisa
  * 
  */
 @Singleton
-public class HandEvaluator {
+public class FiveCardEvaluator {
 
 	private static final int EXPECTED_NUMBER_OF_CARDS_IN_HAND = 5;
 
@@ -36,12 +36,12 @@ public class HandEvaluator {
 	/**
 	 * DI constructor.
 	 */
-	public HandEvaluator() {
+	public FiveCardEvaluator() {
 		byCountThenRank = new CountThenRankOrdering();
 	}
 
 	/**
-	 * Determines the best {@link Hand} of given {@link Card} list.
+	 * Determines the best {@link Hand} of given 5 {@link Card} list.
 	 * 
 	 * @param cardsInHand
 	 *            the {@link Card} list to be evaluated

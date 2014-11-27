@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.sisa.droidodds.domain.card.Rank;
 
-public class EvaluatedHand {
+public class EvaluatedHand implements Comparable<EvaluatedHand> {
 
 	private final Hand hand;
 	private final List<Rank> ascendingSortedDistinctRanks;
@@ -22,4 +22,19 @@ public class EvaluatedHand {
 		return ascendingSortedDistinctRanks;
 	}
 
+	@Override
+	public int compareTo(final EvaluatedHand another) {
+		int result = 0;
+		if (hand.getValue() > another.getHand().getValue()) {
+			result = 1;
+		} else if (hand.getValue() < another.getHand().getValue()) {
+			result = -1;
+		} else {
+			for (int i = 0; i < ascendingSortedDistinctRanks.size() && i < another.getAscendingSortedDistinctRanks().size() && result == 0; i++) {
+				result = ascendingSortedDistinctRanks.get(i).compareTo(another.getAscendingSortedDistinctRanks().get(i));
+			}
+		}
+
+		return result;
+	}
 }
