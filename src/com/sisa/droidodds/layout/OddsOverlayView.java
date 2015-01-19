@@ -75,7 +75,7 @@ public class OddsOverlayView extends OverlayView {
 				info.setText(odds);
 				refresh();
 			}
-			handler.postDelayed(this, 100);
+			// handler.postDelayed(this, 100);
 		}
 	}
 

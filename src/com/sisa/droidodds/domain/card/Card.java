@@ -8,7 +8,7 @@ import org.apache.commons.lang3.Validate;
  * @author Laszlo Sisa
  * 
  */
-public class Card {
+public class Card implements Comparable<Card> {
 
 	private final Rank rank;
 	private final Suit suit;
@@ -71,6 +71,19 @@ public class Card {
 		if (suit != other.suit)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(final Card another) {
+		int compare = 0;
+
+		if (rank.getValue() > another.getRank().getValue())
+			compare = 1;
+		else if (rank.getValue() < another.getRank().getValue())
+			compare = -1;
+		else
+			compare = suit.compareTo(another.getSuit());
+		return compare;
 	}
 
 }

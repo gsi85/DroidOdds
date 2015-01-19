@@ -2,7 +2,9 @@ package com.sisa.droidodds.evaluator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.Validate;
 
@@ -23,15 +25,14 @@ public class CompleteDealEvaluator {
 		sevenCardEvaluator = new SevenCardEvaluator();
 	}
 
-	public Odds evaluateOdds(final List<Card> cardsInHand, final List<Card> communitiyCards) {
+	public Odds evaluateOdds(final List<Card> cardsInHand, final List<Card> communitiyCards) throws ExecutionException {
 		Validate.validState(cardsInHand.size() == 2);
-
-		if (communitiyCards.size() != 5)
-			Validate.validState(communitiyCards.size() == 5);
+		Validate.validState(communitiyCards.size() == 5);
 
 		resetCounters();
 
 		final List<Card> playersCard = concatenateHandWithCommuninityCards(cardsInHand, communitiyCards);
+		Collections.sort(playersCard);
 		final EvaluatedHand playersEvaluatedHand = sevenCardEvaluator.evaluateBestHand(playersCard);
 		final List<Card> deck = new ArrayList<>();
 		deck.addAll(CompleteDeck.getCompleteDeck());
@@ -44,11 +45,14 @@ public class CompleteDealEvaluator {
 				matchCurrentCardsToPlayersHand(playersEvaluatedHand, currentCards);
 			}
 		}
+		final Odds odds = new Odds(winCount, splitCount, totalDealCount);
 
-		return new Odds(winCount, splitCount, totalDealCount);
+		return odds;
 	}
 
-	private void matchCurrentCardsToPlayersHand(final EvaluatedHand playersEvaluatedHand, final List<Card> currentCards) {
+	private void matchCurrentCardsToPlayersHand(final EvaluatedHand playersEvaluatedHand, final List<Card> currentCards)
+			throws ExecutionException {
+		Collections.sort(currentCards);
 		final EvaluatedHand currentHand = sevenCardEvaluator.evaluateBestHand(currentCards);
 		final int compare = playersEvaluatedHand.compareTo(currentHand);
 		if (compare > 0) {

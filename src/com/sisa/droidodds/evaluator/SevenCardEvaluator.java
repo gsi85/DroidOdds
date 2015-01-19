@@ -3,9 +3,13 @@ package com.sisa.droidodds.evaluator;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.Validate;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.hand.EvaluatedHand;
@@ -17,12 +21,26 @@ public class SevenCardEvaluator {
 			Rank.FOUR, Rank.THREE, Rank.DEUCE));
 
 	private final FiveCardEvaluator fiveCardEvaluator;
+	private final LoadingCache<List<Card>, EvaluatedHand> loadingCache;
 
 	public SevenCardEvaluator() {
 		fiveCardEvaluator = new FiveCardEvaluator();
+		final CacheLoader<List<Card>, EvaluatedHand> cacheLoader = new CacheLoader<List<Card>, EvaluatedHand>() {
+
+			@Override
+			public EvaluatedHand load(final List<Card> cards) throws Exception {
+				return evaluateNewHand(cards);
+			}
+
+		};
+		loadingCache = CacheBuilder.newBuilder().maximumSize(179446).build(cacheLoader);
 	}
 
-	public EvaluatedHand evaluateBestHand(final List<Card> cards) {
+	public EvaluatedHand evaluateBestHand(final List<Card> cards) throws ExecutionException {
+		return loadingCache.get(cards);
+	}
+
+	private EvaluatedHand evaluateNewHand(final List<Card> cards) {
 		Validate.validState(cards.size() == 7);
 
 		EvaluatedHand bestHand = LOWEST_POSSIBLE_HAND;

@@ -5,40 +5,37 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
+import com.google.inject.Singleton;
 import com.sisa.droidodds.domain.Odds;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.CompleteDeck;
 
+@Singleton
 public class RecognizedCardEvaluator {
 
-	private final CompleteDealEvaluator completeDealEvaluator;
+	private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
 	private int winCount;
 	private int splitCount;
 	private int totalDealCount;
 	private int variationCount;
-
-	public RecognizedCardEvaluator() {
-		completeDealEvaluator = new CompleteDealEvaluator();
-	}
+	private List<List<Card>> possibleDeals;
+	private CompleteDealEvaluator completeDealEvaluator;
 
 	public Odds evaluateRecognizedCardOdds(final List<Card> recognizedCards) {
 		Validate.validState(recognizedCards.size() >= 5);
-		System.out.println(Runtime.getRuntime().availableProcessors());
-		resetCounters();
+		initState();
 		calculateOdds(recognizedCards);
 		return calculateAvarageOddsCount();
 	}
 
 	private void calculateOdds(final List<Card> recognizedCards) {
-		final List<Card> cardsInHand = recognizedCards.subList(0, 2);
-		final List<Card> communityCards = recognizedCards.subList(2, recognizedCards.size());
-		if (communityCards.size() == 5) {
-			completeDealEvaluator.evaluateOdds(cardsInHand, communityCards);
-			variationCount++;
+		if (recognizedCards.size() == 7) {
+			// DO SMTH
 		} else {
 			final List<Card> deck = initDeck(recognizedCards);
-			evaluateAllPossibleDeals(cardsInHand, deck, communityCards, 0);
+			buildListOfPossibleDeals(recognizedCards, deck, 0);
+			evalutePossibleHands();
 		}
 	}
 
@@ -49,33 +46,44 @@ public class RecognizedCardEvaluator {
 		return deck;
 	}
 
-	private void evaluateAllPossibleDeals(final List<Card> cardsInHand, final List<Card> reaminingCardsInDeck,
-			final List<Card> communityCards, final int startIndex) {
+	private void buildListOfPossibleDeals(final List<Card> recognizedCards, final List<Card> reaminingCardsInDeck, final int startIndex) {
 		for (int currentCardIndex = startIndex; currentCardIndex < reaminingCardsInDeck.size(); currentCardIndex++) {
 
-			final List<Card> currentCommunityCard = new ArrayList<>();
-			currentCommunityCard.addAll(communityCards);
-			currentCommunityCard.add(reaminingCardsInDeck.get(currentCardIndex));
+			final List<Card> currentDeal = new ArrayList<>();
+			currentDeal.addAll(recognizedCards);
+			currentDeal.add(reaminingCardsInDeck.get(currentCardIndex));
 
-			if (currentCommunityCard.size() < 5) {
-				evaluateAllPossibleDeals(cardsInHand, reaminingCardsInDeck, currentCommunityCard, currentCardIndex + 1);
+			if (currentDeal.size() < 7) {
+				buildListOfPossibleDeals(currentDeal, reaminingCardsInDeck, currentCardIndex + 1);
 			} else {
-				// System.out.println(String.format("#%s - %s", variationCount, currentCommunityCard.toString()));
-				completeDealEvaluator.evaluateOdds(cardsInHand, currentCommunityCard);
+				possibleDeals.add(currentDeal);
 				variationCount++;
 			}
 		}
 	}
 
-	private void resetCounters() {
+	private void initState() {
 		winCount = 0;
 		splitCount = 0;
 		totalDealCount = 0;
 		variationCount = 0;
+		possibleDeals = new ArrayList<>();
 	}
 
 	private Odds calculateAvarageOddsCount() {
 		return new Odds(winCount / variationCount, splitCount / variationCount, totalDealCount / variationCount);
 	}
 
+	private void evalutePossibleHands() {
+		completeDealEvaluator = new CompleteDealEvaluator();
+
+		try {
+			for (final List<Card> currentDeal : possibleDeals) {
+				completeDealEvaluator.evaluateOdds(currentDeal.subList(0, 2), currentDeal.subList(2, 7));
+			}
+		} catch (final Exception ex) {
+			// SHOULD BE ExecutionException
+			ex.printStackTrace();
+		}
+	}
 }

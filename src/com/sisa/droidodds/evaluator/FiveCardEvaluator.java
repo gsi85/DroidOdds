@@ -46,10 +46,10 @@ public class FiveCardEvaluator {
 	 * @param cardsInHand
 	 *            the {@link Card} list to be evaluated
 	 * @return the highest ranked {@link Hand} possible for given list
-	 * @throws {@link IllegalArgumentException} if not exactly 5 cards are evaluated
+	 * @throws {@link IllegalStateException} if not exactly 5 cards are evaluated
 	 */
 	public EvaluatedHand evaluateHand(final List<Card> cardsInHand) {
-		Validate.isTrue(cardsInHand.size() == EXPECTED_NUMBER_OF_CARDS_IN_HAND);
+		Validate.validState(cardsInHand.size() == EXPECTED_NUMBER_OF_CARDS_IN_HAND);
 
 		Hand hand;
 		final Set<Suit> suits = EnumSet.noneOf(Suit.class);

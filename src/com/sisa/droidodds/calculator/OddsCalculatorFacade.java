@@ -1,5 +1,7 @@
 package com.sisa.droidodds.calculator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import roboguice.RoboGuice;
@@ -8,6 +10,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
+import com.sisa.droidodds.domain.card.Rank;
+import com.sisa.droidodds.domain.card.Suit;
+import com.sisa.droidodds.evaluator.RecognizedCardEvaluator;
 import com.sisa.droidodds.image.ImageRecognizerFacade;
 import com.sisa.droidodds.layout.OddsOverlayView;
 import com.sisa.droidodds.measurement.StopWatch;
@@ -27,6 +32,8 @@ public class OddsCalculatorFacade {
 	private OddsCalculatorService oddsCalculatorService;
 	@Inject
 	private StopWatch stopWatch;
+	@Inject
+	private RecognizedCardEvaluator recognizedCardEvaluator;
 
 	/**
 	 * DI constructor.
@@ -43,17 +50,21 @@ public class OddsCalculatorFacade {
 	 * @return String which will be set as the text of {@link OddsOverlayView} info text view
 	 */
 	public String getOdds(final String currentTetxt) {
+		// stopWatch.start();
+		// final List<Card> recognizedCards = imageRecognizerFacade.recognizeLatestScreenshot();
+		// oddsCalculatorService.getOdds(recognizedCards);
+		// stopWatch.stop();
+		//
+		// if (recognizedCards.size() != 0) {
+		// return buildResultStrgin(recognizedCards, stopWatch.elapsedInMiliSeconds());
+		// } else {
+		// return (currentTetxt);
+		// }
 		stopWatch.start();
-		final List<Card> recognizedCards = imageRecognizerFacade.recognizeLatestScreenshot();
-		oddsCalculatorService.getOdds(recognizedCards);
+		recognizedCardEvaluator.evaluateRecognizedCardOdds(Arrays.asList(new Card(Rank.EIGHT, Suit.CLUBS), new Card(Rank.NINE, Suit.CLUBS),
+				new Card(Rank.SEVEN, Suit.HEARTS), new Card(Rank.JACK, Suit.DIAMONDS), new Card(Rank.TEN, Suit.SPADES)));
 		stopWatch.stop();
-
-		if (recognizedCards.size() != 0) {
-			return buildResultStrgin(recognizedCards, stopWatch.elapsedInMiliSeconds());
-		} else {
-			return (currentTetxt);
-		}
-
+		return buildResultStrgin(new ArrayList<Card>(), stopWatch.elapsedInMiliSeconds());
 	}
 
 	private String buildResultStrgin(final List<Card> recognizedCards, final double milliSeconds) {
