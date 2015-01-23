@@ -46,11 +46,10 @@ public class RecognizedCardEvaluator {
 		return deck;
 	}
 
-	private void buildListOfPossibleDeals(final List<Card> recognizedCards, final List<Card> reaminingCardsInDeck, final int startIndex) {
+	private void buildListOfPossibleDeals(final List<Card> cardsInHand, final List<Card> reaminingCardsInDeck, final int startIndex) {
 		for (int currentCardIndex = startIndex; currentCardIndex < reaminingCardsInDeck.size(); currentCardIndex++) {
-
 			final List<Card> currentDeal = new ArrayList<>();
-			currentDeal.addAll(recognizedCards);
+			currentDeal.addAll(cardsInHand);
 			currentDeal.add(reaminingCardsInDeck.get(currentCardIndex));
 
 			if (currentDeal.size() < 7) {
@@ -79,7 +78,7 @@ public class RecognizedCardEvaluator {
 
 		try {
 			for (final List<Card> currentDeal : possibleDeals) {
-				completeDealEvaluator.evaluateOdds(currentDeal.subList(0, 2), currentDeal.subList(2, 7));
+				completeDealEvaluator.evaluateOdds(currentDeal);
 			}
 		} catch (final Exception ex) {
 			// SHOULD BE ExecutionException

@@ -2,6 +2,7 @@ package com.sisa.droidodds.evaluator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import junit.framework.Assert;
 
@@ -23,7 +24,7 @@ public class CompleteDealEvaluatorTest {
 	}
 
 	@Test
-	public void testEvaluateShouldReturnSplitWhenCalled() {
+	public void testEvaluateShouldReturnSplitWhenCalled() throws ExecutionException {
 		// GIVEN
 		final List<Card> cardsInHand = Arrays.asList(new Card(Rank.EIGHT, Suit.CLUBS), new Card(Rank.NINE, Suit.CLUBS));
 		final List<Card> communityCards = Arrays.asList(new Card(Rank.TEN, Suit.CLUBS), new Card(Rank.JACK, Suit.CLUBS), new Card(
@@ -37,7 +38,7 @@ public class CompleteDealEvaluatorTest {
 	}
 
 	@Test
-	public void testEvaluateShouldReturn() {
+	public void testEvaluateShouldReturn() throws ExecutionException {
 		// GIVEN
 		final List<Card> cardsInHand = Arrays.asList(new Card(Rank.JACK, Suit.CLUBS), new Card(Rank.DEUCE, Suit.SPADES));
 		final List<Card> communityCards = Arrays.asList(new Card(Rank.THREE, Suit.DIAMONDS), new Card(Rank.JACK, Suit.HEARTS), new Card(

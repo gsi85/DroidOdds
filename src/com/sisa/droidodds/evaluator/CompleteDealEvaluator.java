@@ -1,13 +1,12 @@
 package com.sisa.droidodds.evaluator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.commons.lang3.Validate;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.sisa.droidodds.domain.Odds;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.CompleteDeck;
@@ -17,32 +16,32 @@ public class CompleteDealEvaluator {
 
 	private final SevenCardEvaluator sevenCardEvaluator;
 
+	private final List<Card> deck;
 	private int winCount;
 	private int splitCount;
 	private int totalDealCount;
 
+	private long iterCount;
+
 	public CompleteDealEvaluator() {
 		sevenCardEvaluator = new SevenCardEvaluator();
+		deck = new LinkedList<>();
 	}
 
-	public Odds evaluateOdds(final List<Card> cardsInHand, final List<Card> communitiyCards) throws ExecutionException {
-		Validate.validState(cardsInHand.size() == 2);
-		Validate.validState(communitiyCards.size() == 5);
-
+	public Odds evaluateOdds(final List<Card> currentDeal) throws ExecutionException {
 		resetCounters();
 
-		final List<Card> playersCard = concatenateHandWithCommuninityCards(cardsInHand, communitiyCards);
-		Collections.sort(playersCard);
-		final EvaluatedHand playersEvaluatedHand = sevenCardEvaluator.evaluateBestHand(playersCard);
-		final List<Card> deck = new ArrayList<>();
+		final EvaluatedHand playersEvaluatedHand = sevenCardEvaluator.evaluateBestHand(currentDeal);
+		deck.clear();
 		deck.addAll(CompleteDeck.getCompleteDeck());
-		deck.removeAll(playersCard);
+		deck.removeAll(currentDeal);
 
 		for (int cardsInIndex1 = 0; cardsInIndex1 < deck.size() - 1; cardsInIndex1++) {
 			for (int cardsInIndex2 = cardsInIndex1 + 1; cardsInIndex2 < deck.size(); cardsInIndex2++) {
 				final List<Card> currentCards = concatenateHandWithCommuninityCards(
-						Arrays.asList(deck.get(cardsInIndex1), deck.get(cardsInIndex2)), communitiyCards);
+						Arrays.asList(deck.get(cardsInIndex1), deck.get(cardsInIndex2)), currentDeal.subList(2, 7));
 				matchCurrentCardsToPlayersHand(playersEvaluatedHand, currentCards);
+				iterCount++;
 			}
 		}
 		final Odds odds = new Odds(winCount, splitCount, totalDealCount);
@@ -52,7 +51,6 @@ public class CompleteDealEvaluator {
 
 	private void matchCurrentCardsToPlayersHand(final EvaluatedHand playersEvaluatedHand, final List<Card> currentCards)
 			throws ExecutionException {
-		Collections.sort(currentCards);
 		final EvaluatedHand currentHand = sevenCardEvaluator.evaluateBestHand(currentCards);
 		final int compare = playersEvaluatedHand.compareTo(currentHand);
 		if (compare > 0) {
@@ -64,10 +62,7 @@ public class CompleteDealEvaluator {
 	}
 
 	private List<Card> concatenateHandWithCommuninityCards(final List<Card> cardsInHand, final List<Card> communitiyCards) {
-		final List<Card> cards = new ArrayList<>();
-		cards.addAll(cardsInHand);
-		cards.addAll(communitiyCards);
-		return cards;
+		return Lists.newArrayList(Iterables.concat(cardsInHand, communitiyCards));
 	}
 
 	private void resetCounters() {
