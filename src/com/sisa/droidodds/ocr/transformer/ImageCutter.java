@@ -1,4 +1,4 @@
-package com.sisa.droidodds.image.transformer;
+package com.sisa.droidodds.ocr.transformer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

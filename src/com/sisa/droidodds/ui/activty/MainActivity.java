@@ -1,4 +1,4 @@
-package com.sisa.droidodds.activty;
+package com.sisa.droidodds.ui.activty;
 
 import roboguice.RoboGuice;
 import android.content.Intent;

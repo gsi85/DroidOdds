@@ -1,4 +1,4 @@
-package com.sisa.droidodds.image.transformer;
+package com.sisa.droidodds.ocr.transformer;
 
 import org.apache.commons.lang3.Validate;
 

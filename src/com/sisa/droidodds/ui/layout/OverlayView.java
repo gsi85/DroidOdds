@@ -1,4 +1,4 @@
-package com.sisa.droidodds.layout;
+package com.sisa.droidodds.ui.layout;
 
 import android.content.Context;
 import android.graphics.PixelFormat;

@@ -20,7 +20,7 @@
         android:name="com.sisa.droidodds.DroidOddsApplication" >
         
         <activity
-            android:name="com.sisa.droidodds.activty.MainActivity"
+            android:name="com.sisa.droidodds.ui.activty.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

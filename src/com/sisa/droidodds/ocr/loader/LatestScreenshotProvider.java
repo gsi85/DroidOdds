@@ -1,4 +1,4 @@
-package com.sisa.droidodds.image.loader;
+package com.sisa.droidodds.ocr.loader;
 
 import java.io.File;
 import java.util.Date;

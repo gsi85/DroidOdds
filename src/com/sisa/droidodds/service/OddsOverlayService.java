@@ -3,7 +3,7 @@ package com.sisa.droidodds.service;
 import android.app.Notification;
 
 import com.sisa.droidodds.R;
-import com.sisa.droidodds.layout.OddsOverlayView;
+import com.sisa.droidodds.ui.layout.OddsOverlayView;
 
 public class OddsOverlayService extends OverlayService {
 

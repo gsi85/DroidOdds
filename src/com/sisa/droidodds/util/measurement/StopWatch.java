@@ -1,4 +1,4 @@
-package com.sisa.droidodds.measurement;
+package com.sisa.droidodds.util.measurement;
 
 import java.math.BigDecimal;
 

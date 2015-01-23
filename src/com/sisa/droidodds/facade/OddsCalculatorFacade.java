@@ -1,4 +1,4 @@
-package com.sisa.droidodds.calculator;
+package com.sisa.droidodds.facade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +9,13 @@ import roboguice.RoboGuice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
+import com.sisa.droidodds.calculator.CompositeKnownCardsOddsCalculator;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.card.Suit;
-import com.sisa.droidodds.image.ImageRecognizerFacade;
-import com.sisa.droidodds.layout.OddsOverlayView;
-import com.sisa.droidodds.measurement.StopWatch;
 import com.sisa.droidodds.service.OddsCalculatorService;
+import com.sisa.droidodds.ui.layout.OddsOverlayView;
+import com.sisa.droidodds.util.measurement.StopWatch;
 
 /**
  * Main facade called by activity for calculating the odds of winning with user's cards.

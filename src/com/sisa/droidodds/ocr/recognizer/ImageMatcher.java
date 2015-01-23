@@ -1,4 +1,4 @@
-package com.sisa.droidodds.image.recognizer;
+package com.sisa.droidodds.ocr.recognizer;
 
 import java.util.Iterator;
 import java.util.Map;

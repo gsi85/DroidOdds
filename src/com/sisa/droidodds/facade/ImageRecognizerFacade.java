@@ -1,4 +1,4 @@
-package com.sisa.droidodds.image;
+package com.sisa.droidodds.facade;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
-import com.sisa.droidodds.image.loader.LatestScreenshotProvider;
-import com.sisa.droidodds.image.recognizer.DeckRecognizer;
-import com.sisa.droidodds.image.recognizer.HandRecognizer;
+import com.sisa.droidodds.ocr.loader.LatestScreenshotProvider;
+import com.sisa.droidodds.ocr.recognizer.DeckRecognizer;
+import com.sisa.droidodds.ocr.recognizer.HandRecognizer;
 
 /**
  * Image recognizer facade, completely processes a given screenshot.

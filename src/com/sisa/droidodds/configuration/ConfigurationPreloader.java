@@ -5,11 +5,11 @@ import roboguice.RoboGuice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
-import com.sisa.droidodds.image.recognizer.CardOcr;
-import com.sisa.droidodds.image.recognizer.DeckRecognizer;
-import com.sisa.droidodds.image.recognizer.HandRecognizer;
-import com.sisa.droidodds.image.recognizer.ImageMatcher;
-import com.sisa.droidodds.image.transformer.BlackAndWhiteImageTransformer;
+import com.sisa.droidodds.ocr.recognizer.CardOcr;
+import com.sisa.droidodds.ocr.recognizer.DeckRecognizer;
+import com.sisa.droidodds.ocr.recognizer.HandRecognizer;
+import com.sisa.droidodds.ocr.recognizer.ImageMatcher;
+import com.sisa.droidodds.ocr.transformer.BlackAndWhiteImageTransformer;
 
 /**
  * Responsible for pre-loading values from configuration source into objects, required to enhance performance.

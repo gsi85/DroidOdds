@@ -1,4 +1,4 @@
-package com.sisa.droidodds.image.recognizer;
+package com.sisa.droidodds.ocr.recognizer;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import com.google.inject.Singleton;
 import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.configuration.ConfigurationSource;
 import com.sisa.droidodds.domain.card.Card;
-import com.sisa.droidodds.image.transformer.BlackAndWhiteImageTransformer;
-import com.sisa.droidodds.image.transformer.ImageCutter;
+import com.sisa.droidodds.ocr.transformer.BlackAndWhiteImageTransformer;
+import com.sisa.droidodds.ocr.transformer.ImageCutter;
 
 /**
  * Recognizer for the cards in player's hand.

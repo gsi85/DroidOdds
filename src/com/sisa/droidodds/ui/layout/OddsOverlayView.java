@@ -1,4 +1,4 @@
-package com.sisa.droidodds.layout;
+package com.sisa.droidodds.ui.layout;
 
 import roboguice.RoboGuice;
 import android.content.Context;
@@ -13,10 +13,10 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.R;
-import com.sisa.droidodds.calculator.OddsCalculatorFacade;
 import com.sisa.droidodds.configuration.ConfigurationPreloader;
 import com.sisa.droidodds.configuration.ConfigurationSource;
 import com.sisa.droidodds.configuration.GameMode;
+import com.sisa.droidodds.facade.OddsCalculatorFacade;
 import com.sisa.droidodds.service.OverlayService;
 
 public class OddsOverlayView extends OverlayView {
