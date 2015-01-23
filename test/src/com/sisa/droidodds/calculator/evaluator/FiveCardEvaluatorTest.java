@@ -1,4 +1,4 @@
-package com.sisa.droidodds.evaluator;
+package com.sisa.droidodds.calculator.evaluator;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import com.sisa.droidodds.calculator.evaluator.FiveCardEvaluator;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.card.Suit;

@@ -1,15 +1,15 @@
-package com.sisa.droidodds.evaluator.cache;
+package com.sisa.droidodds.calculator.evaluator.cache;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.cache.CacheLoader;
+import com.sisa.droidodds.calculator.evaluator.FiveCardEvaluator;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.hand.EvaluatedHand;
 import com.sisa.droidodds.domain.hand.Hand;
-import com.sisa.droidodds.evaluator.FiveCardEvaluator;
 
 public class SevenCardEvaluatorCacheLoader extends CacheLoader<List<Card>, EvaluatedHand> {
 
@@ -30,8 +30,7 @@ public class SevenCardEvaluatorCacheLoader extends CacheLoader<List<Card>, Evalu
 		return evaluateNewHand(cards);
 	}
 
-	private EvaluatedHand evaluateNewHand(final List<Card> cards) {
-
+	public EvaluatedHand evaluateNewHand(final List<Card> cards) {
 		EvaluatedHand bestHand = LOWEST_POSSIBLE_HAND;
 		for (int cardOutIndex1 = 0; cardOutIndex1 < MAX_CARDS_OUT_INDEX; cardOutIndex1++) {
 			for (int cardOutIndex2 = cardOutIndex1; cardOutIndex2 < MAX_CARDS_OUT_INDEX; cardOutIndex2++) {

@@ -1,4 +1,4 @@
-package com.sisa.droidodds.calculator;
+package com.sisa.droidodds.service;
 
 import java.util.List;
 

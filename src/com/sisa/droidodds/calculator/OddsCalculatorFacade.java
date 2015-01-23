@@ -12,10 +12,10 @@ import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.card.Suit;
-import com.sisa.droidodds.evaluator.RecognizedCardEvaluator;
 import com.sisa.droidodds.image.ImageRecognizerFacade;
 import com.sisa.droidodds.layout.OddsOverlayView;
 import com.sisa.droidodds.measurement.StopWatch;
+import com.sisa.droidodds.service.OddsCalculatorService;
 
 /**
  * Main facade called by activity for calculating the odds of winning with user's cards.
@@ -33,7 +33,7 @@ public class OddsCalculatorFacade {
 	@Inject
 	private StopWatch stopWatch;
 	@Inject
-	private RecognizedCardEvaluator recognizedCardEvaluator;
+	private CompositeKnownCardsOddsCalculator oddsCalculator;
 
 	/**
 	 * DI constructor.
@@ -61,8 +61,9 @@ public class OddsCalculatorFacade {
 		// return (currentTetxt);
 		// }
 		stopWatch.start();
-		recognizedCardEvaluator.evaluateRecognizedCardOdds(Arrays.asList(new Card(Rank.EIGHT, Suit.CLUBS), new Card(Rank.NINE, Suit.CLUBS),
-				new Card(Rank.SEVEN, Suit.HEARTS), new Card(Rank.JACK, Suit.DIAMONDS), new Card(Rank.TEN, Suit.SPADES)));
+		oddsCalculator.evaluateRecognizedCardOdds(Arrays.asList(new Card(Rank.EIGHT, Suit.CLUBS), new Card(Rank.NINE, Suit.CLUBS),
+				new Card(Rank.SEVEN, Suit.HEARTS), new Card(Rank.JACK, Suit.DIAMONDS), new Card(Rank.TEN, Suit.SPADES), new Card(
+						Rank.DEUCE, Suit.SPADES), new Card(Rank.FIVE, Suit.CLUBS)));
 		stopWatch.stop();
 		return buildResultStrgin(new ArrayList<Card>(), stopWatch.elapsedInMiliSeconds());
 	}

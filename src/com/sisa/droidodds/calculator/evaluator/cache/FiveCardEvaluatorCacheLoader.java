@@ -1,4 +1,4 @@
-package com.sisa.droidodds.evaluator.cache;
+package com.sisa.droidodds.calculator.evaluator.cache;
 
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -51,7 +51,7 @@ public class FiveCardEvaluatorCacheLoader extends CacheLoader<List<Card>, Evalua
 	 * @return the highest ranked {@link Hand} possible for given list
 	 * @throws {@link IllegalStateException} if not exactly 5 cards are evaluated
 	 */
-	private EvaluatedHand evaluateNewHand(final List<Card> cardsInHand) {
+	public EvaluatedHand evaluateNewHand(final List<Card> cardsInHand) {
 		Validate.validState(cardsInHand.size() == EXPECTED_NUMBER_OF_CARDS_IN_HAND);
 
 		Hand hand;

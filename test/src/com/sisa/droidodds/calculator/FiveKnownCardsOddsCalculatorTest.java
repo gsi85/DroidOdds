@@ -1,4 +1,4 @@
-package com.sisa.droidodds.evaluator;
+package com.sisa.droidodds.calculator;
 
 import java.util.Arrays;
 
@@ -7,24 +7,25 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.sisa.droidodds.domain.Odds;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.Rank;
 import com.sisa.droidodds.domain.card.Suit;
 
-public class AllCombinationsTest {
+public class FiveKnownCardsOddsCalculatorTest {
 
-	private AllCombinations underTest;
+	private KnownCardsOddsCalculator underTest;
 
 	@Before
 	public void init() {
-		underTest = new AllCombinations();
+		underTest = new FiveKnownCardsOddsCalculator();
 	}
 
 	@Test
 	public void test() {
-		final long result = underTest.evaluateRecognizedCardOdds(Arrays.asList(new Card(Rank.EIGHT, Suit.CLUBS), new Card(Rank.NINE,
+		final Odds result = underTest.evaluateRecognizedCardOdds(Arrays.asList(new Card(Rank.EIGHT, Suit.CLUBS), new Card(Rank.NINE,
 				Suit.CLUBS), new Card(Rank.SEVEN, Suit.HEARTS), new Card(Rank.JACK, Suit.DIAMONDS), new Card(Rank.TEN, Suit.SPADES)));
 
-		Assert.assertEquals(178365, result);
+		Assert.assertEquals(178365, result.getTotalDealCount());
 	}
 }

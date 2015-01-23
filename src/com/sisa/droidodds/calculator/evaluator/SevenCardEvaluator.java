@@ -1,39 +1,34 @@
-package com.sisa.droidodds.evaluator;
+package com.sisa.droidodds.calculator.evaluator;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.sisa.droidodds.calculator.evaluator.cache.SevenCardEvaluatorCacheLoader;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.hand.EvaluatedHand;
-import com.sisa.droidodds.evaluator.cache.FiveCardEvaluatorCacheLoader;
 
-/**
- * Class for evaluating the best hand of given 5 cards.
- * 
- * @author Laszlo Sisa
- * 
- */
-public class FiveCardEvaluator {
+public class SevenCardEvaluator {
 
 	private final LoadingCache<List<Card>, EvaluatedHand> loadingCache;
+	private final SevenCardEvaluatorCacheLoader cacheLoader;
 
-	public FiveCardEvaluator() {
-		final CacheLoader<List<Card>, EvaluatedHand> cacheLoader = new FiveCardEvaluatorCacheLoader();
+	public SevenCardEvaluator() {
+		cacheLoader = new SevenCardEvaluatorCacheLoader();
 		loadingCache = CacheBuilder.newBuilder().maximumSize(500000).build(cacheLoader);
 	}
 
-	public EvaluatedHand evaluateHand(final List<Card> cards) {
+	public EvaluatedHand evaluateBestHand(final List<Card> cards) {
+		Collections.sort(cards);
 		EvaluatedHand evaluatedHand;
 		try {
 			evaluatedHand = loadingCache.get(cards);
 		} catch (final ExecutionException e) {
-			evaluatedHand = null;
+			evaluatedHand = cacheLoader.evaluateNewHand(cards);
 			e.printStackTrace();
 		}
 		return evaluatedHand;
 	}
-
 }
