@@ -19,10 +19,10 @@ public class SixKnownCardsOddsCalculator extends AbstractKnownCardsOddsCalculato
 	@Override
 	protected void itarateOverAllPossibleCombination(final List<Card> remainingDeck, final Stack<Card> cards) {
 		final int remainingDeckSize = remainingDeck.size();
-		for (int index2 = 0; index2 < remainingDeckSize - 2; index2++) {
+		for (int index2 = 0; index2 < remainingDeckSize - 2 && !isNewCardsAvailable(); index2++) {
 			cards.push(remainingDeck.get(index2));
 			final EvaluatedHand playersHand = evaluateHand(cards);
-			for (int index3 = index2 + 1; index3 < remainingDeckSize - 1; index3++) {
+			for (int index3 = index2 + 1; index3 < remainingDeckSize - 1 && !isNewCardsAvailable(); index3++) {
 				cards.push(remainingDeck.get(index3));
 				for (int index4 = index3 + 1; index4 < remainingDeckSize; index4++) {
 					cards.push(remainingDeck.get(index4));
@@ -33,6 +33,7 @@ public class SixKnownCardsOddsCalculator extends AbstractKnownCardsOddsCalculato
 
 					cards.pop();
 				}
+				publishProgress(index2);
 				cards.pop();
 			}
 			cards.pop();

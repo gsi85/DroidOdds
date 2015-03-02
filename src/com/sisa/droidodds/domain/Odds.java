@@ -30,4 +30,9 @@ public class Odds {
 		return totalDealCount;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Odds [winCount=%s, splitCount=%s, totalDealCount=%s]", winCount, splitCount, totalDealCount);
+	}
+
 }

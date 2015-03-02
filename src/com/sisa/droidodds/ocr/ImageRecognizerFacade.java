@@ -1,4 +1,4 @@
-package com.sisa.droidodds.facade;
+package com.sisa.droidodds.ocr;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import com.sisa.droidodds.ocr.recognizer.DeckRecognizer;
 import com.sisa.droidodds.ocr.recognizer.HandRecognizer;
 
 /**
- * Image recognizer facade, completely processes a given screenshot.
+ * Image recognizer facade, checks if new screenshot is available and recognizes it.
  * 
  * @author Laszlo Sisa
  * 

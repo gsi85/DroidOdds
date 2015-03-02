@@ -4,21 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import roboguice.RoboGuice;
+
+import com.google.inject.Inject;
+import com.sisa.droidodds.DroidOddsApplication;
 import com.sisa.droidodds.calculator.evaluator.SevenCardEvaluator;
 import com.sisa.droidodds.domain.Odds;
 import com.sisa.droidodds.domain.card.Card;
 import com.sisa.droidodds.domain.card.CompleteDeck;
 import com.sisa.droidodds.domain.hand.EvaluatedHand;
+import com.sisa.droidodds.shared.DisplayedOdds;
+import com.sisa.droidodds.shared.LatestRecognizedCards;
 
 public abstract class AbstractKnownCardsOddsCalculator implements KnownCardsOddsCalculator {
 
 	private final SevenCardEvaluator sevenCardEvaluator;
-
+	@Inject
+	private DisplayedOdds displayedOdds;
+	@Inject
+	private LatestRecognizedCards latestRecognizedCards;
 	private int winCount;
 	private int splitCount;
 	private int totalDealCount;
 
 	public AbstractKnownCardsOddsCalculator() {
+		RoboGuice.injectMembers(DroidOddsApplication.getAppContext(), this);
 		sevenCardEvaluator = new SevenCardEvaluator();
 	}
 
@@ -28,7 +38,7 @@ public abstract class AbstractKnownCardsOddsCalculator implements KnownCardsOdds
 		final List<Card> remainingDeck = getRemainingDeck(recognizedCards);
 		final Stack<Card> cards = initializeEvaluatedCardsStack(recognizedCards);
 		itarateOverAllPossibleCombination(remainingDeck, cards);
-		return getFinalOdds();
+		return buildOdds();
 	}
 
 	abstract public int expectedNumberOfKnownCards();
@@ -37,6 +47,15 @@ public abstract class AbstractKnownCardsOddsCalculator implements KnownCardsOdds
 
 	protected EvaluatedHand evaluateHand(final List<Card> arrayList) {
 		return sevenCardEvaluator.evaluateBestHand(arrayList);
+	}
+
+	protected void publishProgress(final int outerCardCount) {
+		displayedOdds.setOdds(buildOdds());
+		displayedOdds.setProcessedOuterCards(outerCardCount);
+	}
+
+	protected boolean isNewCardsAvailable() {
+		return latestRecognizedCards.isCardsUpdated();
 	}
 
 	protected void compareCurrentHand(final EvaluatedHand playersHand, final EvaluatedHand opponentHand) {
@@ -69,7 +88,7 @@ public abstract class AbstractKnownCardsOddsCalculator implements KnownCardsOdds
 		return cards;
 	}
 
-	private Odds getFinalOdds() {
+	private Odds buildOdds() {
 		return new Odds(winCount, splitCount, totalDealCount);
 	}
 

@@ -20,7 +20,7 @@ public class SevenKnownCardsOddsCalculator extends AbstractKnownCardsOddsCalcula
 	protected void itarateOverAllPossibleCombination(final List<Card> remainingDeck, final Stack<Card> cards) {
 		final int remainingDeckSize = remainingDeck.size();
 		final EvaluatedHand playersHand = evaluateHand(cards);
-		for (int index3 = 0; index3 < remainingDeckSize - 1; index3++) {
+		for (int index3 = 0; index3 < remainingDeckSize - 1 && !isNewCardsAvailable(); index3++) {
 			cards.push(remainingDeck.get(index3));
 			for (int index4 = index3 + 1; index4 < remainingDeckSize; index4++) {
 				cards.push(remainingDeck.get(index4));
@@ -31,6 +31,7 @@ public class SevenKnownCardsOddsCalculator extends AbstractKnownCardsOddsCalcula
 
 				cards.pop();
 			}
+			publishProgress(index3);
 			cards.pop();
 		}
 		cards.pop();
